@@ -11,14 +11,18 @@ namespace Client
     public partial class Form1 : Form
     {
         Dictionary<string, string> machineList = new Dictionary<string, string>();
+        private static string machineListFilePath = @"C:\Presentations\Machines.csv";
 
         public Form1()
         {
             InitializeComponent();
-            LoadMachines();
-            UpdateMachines();
+            LoadMachines(machineListFilePath);
         }
 
+        #region Core
+        /// <summary>
+        /// Opens a FileDialogBox, confirms a file has been selected, and sets the selected files path to the related textbox.
+        /// </summary>
         private void SelectFile()
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog
@@ -44,6 +48,10 @@ namespace Client
             }
         }
 
+        /// <summary>
+        /// Sends the file matching the given filename to the requested IP address.
+        /// </summary>
+        /// <param name="filename"></param>
         private void SendFile(String filename)
         {
             if (txtSelectedFile.Text != "")
@@ -59,10 +67,6 @@ namespace Client
                     soc.Client.SendFile(filename);
                     txtStatus.Text = "File Uploaded.";
                     soc.Close();
-                    if (!cbxMachineName.Items.Contains(cbxMachineName.Text))
-                    {
-                        cbxMachineName.Items.Add(cbxMachineName.Text);
-                    }
                 }
                 catch (SocketException err)
                 {
@@ -78,10 +82,16 @@ namespace Client
             }
 
         }
+        #endregion
 
-        private void LoadMachines()
+        #region Machines
+        /// <summary>
+        /// Loads machine names and IP addresses from a local .csv file
+        /// </summary>
+        /// <param name="filepath"></param>
+        private void LoadMachines(string filepath)
         {
-            using (var reader = new StreamReader(@"C:\Presentations\Machines.csv"))
+            using (var reader = new StreamReader(filepath))
             using (var csv = new CsvReader(reader))
             {
                 csv.Read();
@@ -91,20 +101,28 @@ namespace Client
                     machineList.Add(csv.GetField("Key"), csv.GetField("Value"));
                 }
             }
+            UpdateFields();
         }
 
-        private void SaveMachines()
+        /// <summary>
+        /// Saves machine names and IP addresses to a local .csv file
+        /// </summary>
+        /// <param name="filepath"></param>
+        private void SaveMachines(string filepath)
         {
-            using (var writer = new StreamWriter(@"C:\Presentations\Machines.csv"))
+            using (var writer = new StreamWriter(filepath))
             using (var csv = new CsvWriter(writer))
             {
                 csv.WriteRecords(machineList);
             }
         }
 
-        private void UpdateMachines()
+        /// <summary>
+        /// Update the machine name comboBox to display the local records and saves them to the local .csv file
+        /// </summary>
+        private void UpdateFields()
         {
-            SaveMachines();
+            SaveMachines(machineListFilePath);
             cbxMachineName.Items.Clear();
             foreach (KeyValuePair<string, string> machine in machineList)
             {
@@ -112,29 +130,40 @@ namespace Client
             }
         }
 
+        /// <summary>
+        /// Updates the current record in the dictionary of machines with a new value
+        /// </summary>
         private void UpdateMachine()
         {
             machineList[cbxMachineName.Text] = txtIPAddress.Text;
+            UpdateFields();
         }
 
+        /// <summary>
+        /// Adds a new record into the dictionary of machines
+        /// </summary>
         private void AddMachine()
         {
             if (cbxMachineName.Text != "" && txtIPAddress.Text != "")
             {
                 machineList.Add(cbxMachineName.Text, txtIPAddress.Text);
-                UpdateMachines();
+                UpdateFields();
             }
             else
             {
                 MessageBox.Show("Please enter a machine name and IP address.", "Message");
             }
         }
+
+        /// <summary>
+        /// Deletes the current machine from the dictionary of machines
+        /// </summary>
         private void DeleteMachine()
         {
             try
             {
                 machineList.Remove(cbxMachineName.Text);
-                UpdateMachines();
+                UpdateFields();
             }
             catch (ArgumentOutOfRangeException err)
             {
@@ -146,7 +175,9 @@ namespace Client
             }
 
         }
+        #endregion
 
+        #region EventListeners
         private void BtnSelect_Click(object sender, EventArgs e)
         {
             SelectFile();
@@ -178,5 +209,6 @@ namespace Client
         {
             txtIPAddress.Text = machineList[cbxMachineName.Text];
         }
+        #endregion
     }
 }
