@@ -8,15 +8,14 @@ namespace Server
 {
     class Server
     {
-        int port = 8000;
-        string ip;
-        ConsoleSpinner spinner = new ConsoleSpinner();
-        TcpListener listener = new TcpListener(IPAddress.Any, 100);//bypass Compiler
-        Process powerPoint;
-        string archiveFilepath = @"C:\Presentations\Archive\";
-        string filePath = @"C:\Presentations\";
-        string fileName = "Presentation";
-        string fileExt = ".pptx";
+        private ConsoleSpinner spinner = new ConsoleSpinner();
+        private TcpListener listener = new TcpListener(IPAddress.Any, 100);
+        private Process powerPoint;
+        private const string archiveFilepath = @"C:\Presentations\Archive\Presentation";
+        private const string filePath = @"C:\Presentations\Presentation";
+        private const string fileExt = ".pptx";
+        private const int port = 8000;
+        private string ip;
 
         public Server()
         {
@@ -25,6 +24,10 @@ namespace Server
             StartServer();
         }
 
+        #region Server
+        /// <summary>
+        /// Create any required local directories if not already.
+        /// </summary>
         public void CreateDependencies()
         {
             Console.Out.Write("Checking dependencies... ");
@@ -32,6 +35,28 @@ namespace Server
             Console.Out.WriteLine("Done.");
         }
 
+        /// <summary>
+        /// Returns the IP address of the local machine.
+        /// </summary>
+        /// <returns>IP address in string format</returns>
+        public string GetLocalIPAddress()
+        {
+            Console.Out.Write("Getting local IP address... ");
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    Console.Out.WriteLine("Done.");
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
+        }
+
+        /// <summary>
+        /// Attempt to connect the listener to the IP address on the specified port.
+        /// </summary>
         public void StartServer()
         {
             Console.Write("Opening port: " + port + "... ");
@@ -49,6 +74,9 @@ namespace Server
             StartListening();
         }
 
+        /// <summary>
+        /// Start the listener and wait for a connection.
+        /// </summary>
         public void StartListening()
         {
             listener.Start();
@@ -68,12 +96,37 @@ namespace Server
             }
             ReceiveFile();
         }
+        #endregion
 
+        #region FileOperations
+        /// <summary>
+        /// Move the old presentation file into the archive folder with a corresponding time stamp.
+        /// </summary>
+        public void ArchivePresentation()
+        {
+            try
+            {
+                Console.Out.Write("Archiving old presentation... ");
+                if (File.Exists(filePath + fileExt))
+                {
+                    File.Move(filePath + fileExt, archiveFilepath + DateTime.Now.ToString("ddMyy-HHmmss") + fileExt);
+                }
+                Console.Out.WriteLine("Done.");
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Receive the file from the client and save it at the specified directory.
+        /// </summary>
         public void ReceiveFile()
         {
             using (var client = listener.AcceptTcpClient())
             using (var stream = client.GetStream())
-            using (var output = File.Create(filePath + fileName + fileExt))
+            using (var output = File.Create(filePath + fileExt))
             {
                 Console.Write("Reciving file... ");
 
@@ -93,39 +146,42 @@ namespace Server
             OpenPresentation();
             StartListening();
         }
-
-        public void ArchivePresentation()
+        #endregion
+               
+        #region PowerPoint
+        /// <summary>
+        /// Returns a string of the filepath corresponding to the installed power point executable path.
+        /// </summary>
+        /// <returns></returns>
+        public String GetPowerPointPath()
         {
-            try
-            {
-                Console.Out.Write("Archiving old presentation... ");
-                if (File.Exists(filePath + fileName + fileExt))
-                {
-                    File.Move(filePath + fileName + fileExt, archiveFilepath + fileName + DateTime.Now.ToString("ddMyy-HHmmss") + fileExt);
-                }
-                Console.Out.WriteLine("Done.");
-            }
-            catch (Exception)
-            {
+            string powerPointPath = @"C:\Program Files\Microsoft Office\Office14\POWERPNT.EXE";
+            string powerPointPath64 = @"C:\Program Files\Microsoft Office\Office16\POWERPNT.EXE";
+            string powerPointPath86 = @"C:\Program Files (x86)\Microsoft Office\Office14\POWERPNT.EXE";
 
+            if (File.Exists(powerPointPath))
+            {
+                return powerPointPath;
             }
+            else if (File.Exists(powerPointPath64))
+            {
+                return powerPointPath64;
+            }
+            else if (File.Exists(powerPointPath86))
+            {
+                return powerPointPath86;
+            }
+            else
+            {
+                Console.WriteLine("Office is not installed or could not be found.");
+                return "";
+            }
+
         }
 
-        public string GetLocalIPAddress()
-        {
-            Console.Out.Write("Getting local IP address... ");
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    Console.Out.WriteLine("Done.");
-                    return ip.ToString();
-                }
-            }
-            throw new Exception("No network adapters with an IPv4 address in the system!");
-        }
-
+        /// <summary>
+        /// Opens the current presentation file.
+        /// </summary>
         public void OpenPresentation()
         {
             try
@@ -147,39 +203,9 @@ namespace Server
 
         }
 
-        // Return a string of the correct power point executable path
-        public String GetPowerPointPath()
-        {
-            // C:\Program Files(x86)\Microsoft Office\Office14
-            string powerPointPath = @"C:\Program Files\Microsoft Office\Office14\POWERPNT";
-            string powerPointPath64 = @"C:\Program Files\Microsoft Office\Office16\POWERPNT";
-            string powerPointPath86 = @"C:\Program Files (x86)\Microsoft Office\Office14\POWERPNT";
-            string extension = ".EXE";
-
-
-            if (File.Exists(powerPointPath + extension))
-            {
-                //Console.WriteLine("Office 14 Exists");
-                return powerPointPath + extension;
-            }
-            else if (File.Exists(powerPointPath64 + extension))
-            {
-                //Console.WriteLine("Office 16 Exists");
-                return powerPointPath64 + extension;
-            }
-            else if (File.Exists(powerPointPath86 + extension))
-            {
-                //Console.WriteLine("Office x86 Exists");
-                return powerPointPath86 + extension;
-            }
-            else
-            {
-                Console.WriteLine("Office is not installed or could not be found.");
-                return "";
-            }
-
-        }
-
+        /// <summary>
+        /// Closes power point presentation if currently running.
+        /// </summary>
         public void ClosePresentation()
         {
             try
@@ -197,6 +223,7 @@ namespace Server
                 Console.WriteLine("No presentation running.");
             }
         }
+        #endregion
     }
 }
 

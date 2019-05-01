@@ -14,6 +14,9 @@ namespace Server
             sequence = new string[] { ".   ", "..  ", "... ", "...." };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Run()
         {
             counter++;
