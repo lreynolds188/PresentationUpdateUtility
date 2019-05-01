@@ -16,7 +16,7 @@ namespace Server
         private const string fileExt = ".pptx";
         private const int port = 8000;
         private string ip;
-
+        
         public Server()
         {
             CreateDependencies();

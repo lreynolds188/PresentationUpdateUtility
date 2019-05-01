@@ -51,7 +51,7 @@ namespace Client
         /// <summary>
         /// Sends the file matching the given filename to the requested IP address.
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="filename">A string containing a filename and path.</param>
         private void SendFile(String filename)
         {
             if (txtSelectedFile.Text != "")
@@ -88,7 +88,7 @@ namespace Client
         /// <summary>
         /// Loads machine names and IP addresses from a local .csv file
         /// </summary>
-        /// <param name="filepath"></param>
+        /// <param name="filepath">A string containing a filename and path.</param>
         private void LoadMachines(string filepath)
         {
             using (var reader = new StreamReader(filepath))
@@ -107,7 +107,7 @@ namespace Client
         /// <summary>
         /// Saves machine names and IP addresses to a local .csv file
         /// </summary>
-        /// <param name="filepath"></param>
+        /// <param name="filepath">A string containing a filename and path.</param>
         private void SaveMachines(string filepath)
         {
             using (var writer = new StreamWriter(filepath))

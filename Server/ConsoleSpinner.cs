@@ -2,6 +2,9 @@
 
 namespace Server
 {
+    /// <summary>
+    /// Contains functionality for console animation.
+    /// </summary>
     class ConsoleSpinner
     {
         int counter;
@@ -15,7 +18,7 @@ namespace Server
         }
 
         /// <summary>
-        /// 
+        /// Begins the ConsoleSpinner thread displaying the console loading animation.
         /// </summary>
         public void Run()
         {
