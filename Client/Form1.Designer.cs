@@ -45,7 +45,7 @@
             // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(562, 4);
+            this.btnDelete.Location = new System.Drawing.Point(561, 10);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(104, 35);
             this.btnDelete.TabIndex = 34;
@@ -56,7 +56,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 12);
+            this.label3.Location = new System.Drawing.Point(15, 18);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(119, 20);
             this.label3.TabIndex = 33;
@@ -64,7 +64,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(453, 4);
+            this.btnSave.Location = new System.Drawing.Point(452, 10);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(104, 35);
             this.btnSave.TabIndex = 32;
@@ -75,7 +75,7 @@
             // cbxMachineName
             // 
             this.cbxMachineName.FormattingEnabled = true;
-            this.cbxMachineName.Location = new System.Drawing.Point(140, 7);
+            this.cbxMachineName.Location = new System.Drawing.Point(139, 13);
             this.cbxMachineName.Name = "cbxMachineName";
             this.cbxMachineName.Size = new System.Drawing.Size(306, 28);
             this.cbxMachineName.TabIndex = 31;
@@ -101,7 +101,7 @@
             // 
             // txtIPAddress
             // 
-            this.txtIPAddress.Location = new System.Drawing.Point(139, 46);
+            this.txtIPAddress.Location = new System.Drawing.Point(138, 52);
             this.txtIPAddress.Name = "txtIPAddress";
             this.txtIPAddress.Size = new System.Drawing.Size(307, 26);
             this.txtIPAddress.TabIndex = 35;
@@ -109,7 +109,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(42, 53);
+            this.label2.Location = new System.Drawing.Point(41, 59);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(91, 20);
             this.label2.TabIndex = 29;
@@ -118,7 +118,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(27, 88);
+            this.label1.Location = new System.Drawing.Point(26, 94);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(105, 20);
             this.label1.TabIndex = 28;
@@ -126,14 +126,14 @@
             // 
             // txtSelectedFile
             // 
-            this.txtSelectedFile.Location = new System.Drawing.Point(140, 84);
+            this.txtSelectedFile.Location = new System.Drawing.Point(139, 90);
             this.txtSelectedFile.Name = "txtSelectedFile";
             this.txtSelectedFile.Size = new System.Drawing.Size(524, 26);
             this.txtSelectedFile.TabIndex = 27;
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(562, 45);
+            this.btnSend.Location = new System.Drawing.Point(561, 51);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(104, 35);
             this.btnSend.TabIndex = 26;
@@ -143,7 +143,7 @@
             // 
             // btnSelect
             // 
-            this.btnSelect.Location = new System.Drawing.Point(453, 45);
+            this.btnSelect.Location = new System.Drawing.Point(452, 51);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(104, 35);
             this.btnSelect.TabIndex = 25;

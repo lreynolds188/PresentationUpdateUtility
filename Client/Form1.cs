@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CsvHelper;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
@@ -14,6 +16,7 @@ namespace Client
         {
             InitializeComponent();
             LoadMachines();
+            UpdateMachines();
         }
 
         private void SelectFile()
@@ -78,6 +81,30 @@ namespace Client
 
         private void LoadMachines()
         {
+            using (var reader = new StreamReader(@"C:\Presentations\Machines.csv"))
+            using (var csv = new CsvReader(reader))
+            {
+                csv.Read();
+                csv.ReadHeader();
+                while (csv.Read())
+                {
+                    machineList.Add(csv.GetField("Key"), csv.GetField("Value"));
+                }
+            }
+        }
+
+        private void SaveMachines()
+        {
+            using (var writer = new StreamWriter(@"C:\Presentations\Machines.csv"))
+            using (var csv = new CsvWriter(writer))
+            {
+                csv.WriteRecords(machineList);
+            }
+        }
+
+        private void UpdateMachines()
+        {
+            SaveMachines();
             cbxMachineName.Items.Clear();
             foreach (KeyValuePair<string, string> machine in machineList)
             {
@@ -95,7 +122,7 @@ namespace Client
             if (cbxMachineName.Text != "" && txtIPAddress.Text != "")
             {
                 machineList.Add(cbxMachineName.Text, txtIPAddress.Text);
-                LoadMachines();
+                UpdateMachines();
             }
             else
             {
@@ -107,7 +134,7 @@ namespace Client
             try
             {
                 machineList.Remove(cbxMachineName.Text);
-                LoadMachines();
+                UpdateMachines();
             }
             catch (ArgumentOutOfRangeException err)
             {
